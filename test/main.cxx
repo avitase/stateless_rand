@@ -39,3 +39,14 @@ TEST_CASE("Random numbers match those of std::minstd_rand", "[stateless_rnd]") {
   rnd2.discard(1000);
   REQUIRE(rnd1.discard(1102).value() == rnd2());
 }
+
+TEST_CASE("min() and max() values match those of std::minstd_rand",
+          "[stateless_rnd]") {
+  constexpr statelessrnd::stateless_rand rnd1{default_seed};
+  constexpr auto min = rnd1.min();
+  constexpr auto max = rnd1.max();
+
+  std::minstd_rand rnd2{default_seed};
+  REQUIRE(min == rnd2.min());
+  REQUIRE(max == rnd2.max());
+}
