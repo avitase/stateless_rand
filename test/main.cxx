@@ -3,6 +3,12 @@
 #include <random>
 #include "statelessrnd.hpp"
 
+template <bool b>
+constexpr auto static_test() noexcept {
+  static_assert(b);
+  return b;
+}
+
 constexpr statelessrnd::stateless_rand::value_type default_seed = 42u;
 
 TEST_CASE("Value does not change for subsequent calls to non-const getter",
@@ -15,30 +21,18 @@ TEST_CASE("Value does not change for subsequent calls to non-const getter",
 
 TEST_CASE("Getters return all same value after calling next() once",
           "[stateless_rnd]") {
-  constexpr auto rnd = statelessrnd::stateless_rand{default_seed}.next();
+  using namespace statelessrnd;
+  constexpr auto rnd = stateless_rand{default_seed}.next();
   constexpr auto value = rnd.value();
-  REQUIRE(rnd.value() == value);
-  REQUIRE(*rnd == value);
-  REQUIRE(static_cast<statelessrnd::stateless_rand::value_type>(rnd) == value);
-}
-
-TEST_CASE("next() is evaluated at compile-time if possible",
-          "[stateless_rnd]") {
-  constexpr statelessrnd::stateless_rand rnd{default_seed};
-  constexpr auto next = rnd.next();
-  REQUIRE(true);
-}
-
-TEST_CASE("discard() is evaluated at compile-time if possible",
-          "[stateless_rnd]") {
-  constexpr statelessrnd::stateless_rand rnd{default_seed};
-  constexpr auto next = rnd.discard(10);
-  REQUIRE(true);
+  REQUIRE(static_test<rnd.value() == value>());
+  REQUIRE(static_test<*rnd == value>());
+  REQUIRE(static_test<static_cast<stateless_rand::value_type>(rnd) == value>());
 }
 
 TEST_CASE("Discard skips random numbers", "[stateless_rnd]") {
   constexpr statelessrnd::stateless_rand rnd{default_seed};
-  REQUIRE(rnd.next().next().next().value() == rnd.discard(3).value());
+  REQUIRE(static_test<rnd.next().next().next().value() ==
+                      rnd.discard(3).value()>());
 }
 
 TEST_CASE("Random numbers match those of std::minstd_rand", "[stateless_rnd]") {
@@ -68,5 +62,5 @@ TEST_CASE("min() and max() values match those of std::minstd_rand",
 TEST_CASE("When first value is not skipped, random number is seed",
           "[stateless_rnd]") {
   constexpr statelessrnd::stateless_rand rnd{default_seed, false};
-  REQUIRE(rnd.value() == default_seed);
+  REQUIRE(static_test<rnd.value() == default_seed>());
 }
