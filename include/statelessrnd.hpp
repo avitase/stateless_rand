@@ -39,7 +39,7 @@ class stateless_rand final {
     return value();
   }
 
-  [[nodiscard]] constexpr auto min() const noexcept { return 0; }
+  [[nodiscard]] constexpr auto min() const noexcept { return 1; }
 
   [[nodiscard]] constexpr auto max() const noexcept { return M - 1; }
 };
