@@ -22,6 +22,18 @@ TEST_CASE("Getters return all same value after calling next() once",
   REQUIRE(static_cast<statelessrnd::stateless_rand::value_type>(rnd) == value);
 }
 
+TEST_CASE("next() is evaluated at compile-time if possible", "[stateless_rnd]") {
+  constexpr statelessrnd::stateless_rand rnd{default_seed};
+  constexpr auto next = rnd.next();
+  REQUIRE(true);
+}
+
+TEST_CASE("discard() is evaluated at compile-time if possible", "[stateless_rnd]") {
+  constexpr statelessrnd::stateless_rand rnd{default_seed};
+  constexpr auto next = rnd.discard(10);
+  REQUIRE(true);
+}
+
 TEST_CASE("Discard skips random numbers", "[stateless_rnd]") {
   constexpr statelessrnd::stateless_rand rnd{default_seed};
   REQUIRE(rnd.next().next().next().value() == rnd.discard(3).value());
