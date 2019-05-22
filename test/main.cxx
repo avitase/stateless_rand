@@ -50,3 +50,9 @@ TEST_CASE("min() and max() values match those of std::minstd_rand",
   REQUIRE(min == rnd2.min());
   REQUIRE(max == rnd2.max());
 }
+
+TEST_CASE("When first value is not skipped, random number is seed",
+          "[stateless_rnd]") {
+  constexpr statelessrnd::stateless_rand rnd{default_seed, false};
+  REQUIRE(rnd.value() == default_seed);
+}
