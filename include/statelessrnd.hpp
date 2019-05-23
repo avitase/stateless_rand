@@ -3,13 +3,10 @@
 #include <cstdint>
 
 namespace statelessrnd {
+template <typename T, T A, T C, T M>
 class stateless_rand final {
  public:
-  using value_type = std::uint_fast32_t;
-
-  static constexpr value_type A = 48271u;
-  static constexpr value_type C = 0u;
-  static constexpr value_type M = 2147483647u;
+  using value_type = T;
 
  private:
   value_type _state;
@@ -43,4 +40,6 @@ class stateless_rand final {
 
   [[nodiscard]] constexpr auto max() const noexcept { return M - 1; }
 };
+
+using minstd_rand = stateless_rand<std::uint_fast32_t, 48271u, 0u, 2147483647u>;
 }  // namespace statelessrnd
