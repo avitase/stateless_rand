@@ -63,3 +63,11 @@ TEST_CASE("When first value is not skipped, random number is seed",
   constexpr statelessrnd::minstd_rand rnd{default_seed, false};
   REQUIRE(static_test<rnd.value() == default_seed>());
 }
+
+TEST_CASE("Seeding enters a sequence", "[stateless_rnd]") {
+  std::minstd_rand rnd1{default_seed};
+  rnd1.discard(100);
+
+  statelessrnd::minstd_rand rnd2{rnd1(), false};
+  REQUIRE(rnd1() == rnd2.next().value());
+}
