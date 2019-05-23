@@ -32,7 +32,7 @@ class stateless_rand final {
 
   [[nodiscard]] constexpr auto operator*() const noexcept { return value(); }
 
-  [[nodiscard]] constexpr operator value_type() const noexcept {
+  [[nodiscard]] constexpr explicit operator value_type() const noexcept {
     return value();
   }
 
