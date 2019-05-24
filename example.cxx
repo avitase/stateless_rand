@@ -2,11 +2,6 @@
 #include <random>
 #include "statelessrnd.hpp"
 
-template <typename T>
-void print(T rnd) {
-  std::cout << *rnd << '\n';
-}
-
 int main() {
   using namespace statelessrnd;
 
