@@ -11,3 +11,5 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address \
 include_directories(include)
 include_directories(lib SYSTEM)
 add_executable(runAllUnitTests test/main.cxx test/test_stateless_rand.cpp)
+
+add_executable(example example.cxx)
