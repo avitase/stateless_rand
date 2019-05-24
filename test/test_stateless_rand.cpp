@@ -1,4 +1,5 @@
 #include <catch.hpp>
+#include <limits>
 #include <random>
 #include "statelessrnd.hpp"
 
@@ -70,4 +71,17 @@ TEST_CASE("Seeding enters a sequence", "[stateless_rnd]") {
 
   statelessrnd::minstd_rand rnd2{rnd1(), false};
   REQUIRE(rnd1() == rnd2.next().value());
+}
+
+TEST_CASE("Seed is clamped to [min(), max()]", "[stateless_rnd]") {
+  using namespace statelessrnd;
+  using seed_t = minstd_rand::value_type;
+  constexpr seed_t invalid_seed1 = 0u;
+  constexpr seed_t invalid_seed2 = std::numeric_limits<seed_t>::max();
+
+  constexpr minstd_rand rnd1{invalid_seed1};
+  constexpr minstd_rand rnd2{invalid_seed1};
+
+  REQUIRE(static_test<rnd1.value() == minstd_rand{rnd1.min()}.value()>());
+  REQUIRE(static_test<rnd2.value() == minstd_rand{rnd2.min()}.value()>());
 }

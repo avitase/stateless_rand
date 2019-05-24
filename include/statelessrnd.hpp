@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
 
 namespace statelessrnd {
@@ -10,6 +11,12 @@ class stateless_rand final {
 
  private:
   value_type _state;
+  static constexpr value_type _min = 1u;
+  static constexpr value_type _max = M - 1u;
+
+  [[nodiscard]] static constexpr auto clamp_seed(value_type seed) noexcept {
+    return std::clamp(seed, _min, _max);
+  }
 
   [[nodiscard]] static constexpr auto advance(value_type x) noexcept {
     return (x * A + C) % M;
@@ -17,7 +24,7 @@ class stateless_rand final {
 
  public:
   constexpr explicit stateless_rand(value_type seed, bool skip_first = true)
-      : _state(skip_first ? advance(seed) : seed) {}
+      : _state(skip_first ? advance(clamp_seed(seed)) : clamp_seed(seed)) {}
 
   [[nodiscard]] constexpr auto next() const noexcept {
     return stateless_rand{_state, true};
@@ -36,9 +43,9 @@ class stateless_rand final {
     return value();
   }
 
-  [[nodiscard]] constexpr auto min() const noexcept { return 1; }
+  [[nodiscard]] constexpr auto min() const noexcept { return _min; }
 
-  [[nodiscard]] constexpr auto max() const noexcept { return M - 1; }
+  [[nodiscard]] constexpr auto max() const noexcept { return _max; }
 };
 
 using minstd_rand = stateless_rand<std::uint_fast32_t, 48271u, 0u, 2147483647u>;
