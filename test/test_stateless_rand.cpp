@@ -31,8 +31,8 @@ TEST_CASE("Getters return all same value after calling next() once",
 
 TEST_CASE("Discard skips random numbers", "[stateless_rnd]") {
   constexpr statelessrnd::minstd_rand rnd{default_seed};
-  REQUIRE(static_test<rnd.next().next().next().value() ==
-                      rnd.discard(3).value()>());
+  constexpr auto next3 = rnd.next().next().next();
+  REQUIRE(static_test<next3.value() == rnd.discard(3).value()>());
 }
 
 TEST_CASE("Random numbers match those of std::minstd_rand", "[stateless_rnd]") {
