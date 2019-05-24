@@ -37,6 +37,11 @@ std::cout << minstd_rand{stlrnd()}.value() << '\n'; // 1571445537
 std::cout << stlrnd() << '\n';                      // 1571445537
 ```
 
+Seeds lower than `min()` or greater than `max()` are considered ill-formed and are clamped onto the interval [`min()`, `max()`] during construction. In particular, this means for any generator with `c=0`, that `seed = 0` and `seed = 1` are equivalent and produce the same sequence!
+```
+static_assert(minstd_rand{0u}.value() == minstd_rand{1u}.value());
+```
+
 The type of the state (accessible via `stateless_rand::value_type`), `a`, `c` and `m` are template parameters. A decent choice which matches the one of `std::minstd_rand`, is named `minstd_rand` in the `statlessrnd` namespace of this library.
 ```
 using minstd_rand = stateless_rand<std::uint_fast32_t, 48271u, 0u, 2147483647u>;
