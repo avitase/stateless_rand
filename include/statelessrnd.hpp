@@ -4,7 +4,7 @@
 #include <cstdint>
 
 namespace statelessrnd {
-template <typename T, T A, T C, T M>
+template <std::uint64_t A, std::uint64_t C, std::uint64_t M>
 class stateless_rand final {
  public:
   using value_type = T;
@@ -19,10 +19,7 @@ class stateless_rand final {
   }
 
   [[nodiscard]] static constexpr auto advance(value_type x) noexcept {
-    return static_cast<T>(
-        (static_cast<std::uint64_t>(x) * static_cast<std::uint64_t>(A) +
-         static_cast<std::uint64_t>(C)) %
-        static_cast<std::uint64_t>(M));
+    return static_cast<value_type>((x * A + C) % M);
   }
 
   constexpr explicit stateless_rand(value_type seed) : _state(seed) {}
@@ -56,5 +53,5 @@ class stateless_rand final {
   [[nodiscard]] constexpr auto max() const noexcept { return _max; }
 };
 
-using minstd_rand = stateless_rand<std::uint_fast32_t, 48271u, 0u, 2147483647u>;
+using minstd_rand = stateless_rand<48271u, 0u, 2147483647u>;
 }  // namespace statelessrnd

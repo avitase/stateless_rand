@@ -9,7 +9,7 @@ constexpr auto rnd = minstd_rand::init(42u); // 2027382
 constexpr auto rnd2 = rnd.next();            // 1226992407
 ```
 
-The state can be accessed via three equivalent methods: `*` (dereferencing operator), `value()` or the conversion operator to the underlying type. This underlying state type is a template parameter `T` but should in most cases set to `int`, `std::int32_t`, `std::int_fast32_t` or similar.
+The state can be accessed via three equivalent methods: `*` (dereferencing operator), `value()` or the conversion operator to the underlying type.
 ```
 constexpr auto a = *rnd;                    // 2027382
 constexpr auto b = rnd.value();             // 2027382
@@ -42,7 +42,7 @@ Seeds lower than `min()` or greater than `max()` are considered ill-formed and a
 static_assert(minstd_rand::init(0u).value() == minstd_rand::init(1u).value());
 ```
 
-The type of the state (accessible via `stateless_rand::value_type`), `a`, `c` and `m` are template parameters. A decent choice which matches the one of `std::minstd_rand`, is named `minstd_rand` in the `statlessrnd` namespace of this library.
+The type of the state is accessible via `stateless_rand::value_type`, `a`, `c` and `m` are template parameters. A decent choice which matches the one of `std::minstd_rand`, is named `minstd_rand` in the `statlessrnd` namespace of this library.
 ```
-using minstd_rand = stateless_rand<std::uint_fast32_t, 48271u, 0u, 2147483647u>;
+using minstd_rand = stateless_rand<48271u, 0u, 2147483647u>;
 ```
