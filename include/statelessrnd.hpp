@@ -7,7 +7,11 @@ namespace statelessrnd {
 template <std::uint64_t A, std::uint64_t C, std::uint64_t M>
 class stateless_rand final {
  public:
-  using value_type = T;
+  using value_type = std::uint32_t;
+  static constexpr decltype(A) multiplier = A;
+  static constexpr decltype(C) increment = C;
+  static constexpr decltype(M) modulus = M;
+  static constexpr value_type default_seed = 1u;
 
  private:
   value_type _state;
@@ -25,7 +29,7 @@ class stateless_rand final {
   constexpr explicit stateless_rand(value_type seed) : _state(seed) {}
 
  public:
-  [[nodiscard]] static constexpr auto init(value_type seed,
+  [[nodiscard]] static constexpr auto init(value_type seed = default_seed,
                                            bool skip_first = true) noexcept {
     return stateless_rand{skip_first ? advance(clamp_seed(seed))
                                      : clamp_seed(seed)};
