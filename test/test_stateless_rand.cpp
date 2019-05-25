@@ -13,7 +13,7 @@ constexpr statelessrnd::minstd_rand::value_type default_seed = 42u;
 
 TEST_CASE("Value does not change for subsequent calls to non-const getter",
           "[stateless_rnd]") {
-  auto rnd = statelessrnd::minstd_rand::init(default_seed);
+  auto rnd = statelessrnd::minstd_rand::seed(default_seed);
   auto value = *rnd;
   REQUIRE(rnd.value() == value);
   REQUIRE(rnd.value() == value);
@@ -22,7 +22,7 @@ TEST_CASE("Value does not change for subsequent calls to non-const getter",
 TEST_CASE("Getters return all same value after calling next() once",
           "[stateless_rnd]") {
   using namespace statelessrnd;
-  constexpr auto rnd = minstd_rand::init(default_seed).next();
+  constexpr auto rnd = minstd_rand::seed(default_seed).next();
   constexpr auto value = rnd.value();
   REQUIRE(static_test<rnd.value() == value>());
   REQUIRE(static_test<*rnd == value>());
@@ -30,13 +30,13 @@ TEST_CASE("Getters return all same value after calling next() once",
 }
 
 TEST_CASE("Discard skips random numbers", "[stateless_rnd]") {
-  constexpr auto rnd = statelessrnd::minstd_rand::init(default_seed);
+  constexpr auto rnd = statelessrnd::minstd_rand::seed(default_seed);
   constexpr auto next3 = rnd.next().next().next();
   REQUIRE(static_test<next3.value() == rnd.discard(3).value()>());
 }
 
 TEST_CASE("Random numbers match those of std::minstd_rand", "[stateless_rnd]") {
-  constexpr auto rnd1 = statelessrnd::minstd_rand::init(default_seed);
+  constexpr auto rnd1 = statelessrnd::minstd_rand::seed(default_seed);
   std::minstd_rand rnd2{default_seed};
 
   REQUIRE(rnd1.value() == rnd2());
@@ -50,7 +50,7 @@ TEST_CASE("Random numbers match those of std::minstd_rand", "[stateless_rnd]") {
 
 TEST_CASE("min() and max() values match those of std::minstd_rand",
           "[stateless_rnd]") {
-  constexpr auto rnd1 = statelessrnd::minstd_rand::init(default_seed);
+  constexpr auto rnd1 = statelessrnd::minstd_rand::seed(default_seed);
   constexpr auto min = rnd1.min();
   constexpr auto max = rnd1.max();
 
@@ -61,7 +61,7 @@ TEST_CASE("min() and max() values match those of std::minstd_rand",
 
 TEST_CASE("When first value is not skipped, random number is seed",
           "[stateless_rnd]") {
-  constexpr auto rnd = statelessrnd::minstd_rand::init(default_seed, false);
+  constexpr auto rnd = statelessrnd::minstd_rand::seed(default_seed, false);
   REQUIRE(static_test<rnd.value() == default_seed>());
 }
 
@@ -69,7 +69,7 @@ TEST_CASE("Seeding enters a sequence", "[stateless_rnd]") {
   std::minstd_rand rnd1{default_seed};
   rnd1.discard(100);
 
-  auto rnd2 = statelessrnd::minstd_rand::init(rnd1(), false);
+  auto rnd2 = statelessrnd::minstd_rand::seed(rnd1(), false);
   REQUIRE(rnd1() == rnd2.next().value());
 }
 
@@ -79,9 +79,9 @@ TEST_CASE("Seed is clamped to [min(), max()]", "[stateless_rnd]") {
   constexpr seed_t invalid_seed1 = 0u;
   constexpr seed_t invalid_seed2 = std::numeric_limits<seed_t>::max();
 
-  constexpr auto rnd1 = minstd_rand::init(invalid_seed1);
-  constexpr auto rnd2 = minstd_rand::init(invalid_seed2);
+  constexpr auto rnd1 = minstd_rand::seed(invalid_seed1);
+  constexpr auto rnd2 = minstd_rand::seed(invalid_seed2);
 
-  REQUIRE(static_test<rnd1.value() == minstd_rand::init(rnd1.min()).value()>());
-  REQUIRE(static_test<rnd2.value() == minstd_rand::init(rnd2.max()).value()>());
+  REQUIRE(static_test<rnd1.value() == minstd_rand::seed(rnd1.min()).value()>());
+  REQUIRE(static_test<rnd2.value() == minstd_rand::seed(rnd2.max()).value()>());
 }

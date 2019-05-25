@@ -29,7 +29,7 @@ class stateless_rand final {
   constexpr explicit stateless_rand(value_type seed) : _state(seed) {}
 
  public:
-  [[nodiscard]] static constexpr auto init(value_type seed = default_seed,
+  [[nodiscard]] static constexpr auto seed(value_type seed = default_seed,
                                            bool skip_first = true) noexcept {
     return stateless_rand{skip_first ? advance(clamp_seed(seed))
                                      : clamp_seed(seed)};
