@@ -19,7 +19,10 @@ class stateless_rand final {
   }
 
   [[nodiscard]] static constexpr auto advance(value_type x) noexcept {
-    return (x * A + C) % M;
+    return static_cast<T>(
+        (static_cast<std::uint64_t>(x) * static_cast<std::uint64_t>(A) +
+         static_cast<std::uint64_t>(C)) %
+        static_cast<std::uint64_t>(M));
   }
 
   constexpr explicit stateless_rand(value_type seed) : _state(seed) {}
