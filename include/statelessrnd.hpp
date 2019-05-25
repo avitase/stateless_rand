@@ -22,17 +22,22 @@ class stateless_rand final {
     return (x * A + C) % M;
   }
 
+  constexpr explicit stateless_rand(value_type seed) : _state(seed) {}
+
  public:
-  constexpr explicit stateless_rand(value_type seed, bool skip_first = true)
-      : _state(skip_first ? advance(clamp_seed(seed)) : clamp_seed(seed)) {}
+  [[nodiscard]] static constexpr auto init(value_type seed,
+                                           bool skip_first = true) noexcept {
+    return stateless_rand{skip_first ? advance(clamp_seed(seed))
+                                     : clamp_seed(seed)};
+  }
 
   [[nodiscard]] constexpr auto next() const noexcept {
-    return stateless_rand{_state, true};
+    return stateless_rand{advance(_state)};
   }
 
   [[nodiscard]] constexpr stateless_rand discard(unsigned int n) const
       noexcept {
-    return (n == 0u ? stateless_rand{_state, false} : next().discard(n - 1));
+    return (n == 0u ? stateless_rand{_state} : next().discard(n - 1));
   }
 
   [[nodiscard]] constexpr auto value() const noexcept { return _state; }
