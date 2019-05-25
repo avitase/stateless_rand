@@ -11,6 +11,13 @@ constexpr auto static_test() noexcept {
 
 constexpr statelessrnd::minstd_rand::value_type default_seed = 42u;
 
+TEST_CASE("Size of stateless_rand matches the size of a single value_type",
+          "[stateless_rnd]") {
+  using namespace statelessrnd;
+  auto rnd = minstd_rand::seed(default_seed);
+  static_test<sizeof(rnd) == sizeof(minstd_rand::value_type)>();
+}
+
 TEST_CASE("Value does not change for subsequent calls to non-const getter",
           "[stateless_rnd]") {
   auto rnd = statelessrnd::minstd_rand::seed(default_seed);
