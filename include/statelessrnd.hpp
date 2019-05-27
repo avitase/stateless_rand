@@ -4,7 +4,7 @@
 #include <cstdint>
 
 namespace statelessrnd {
-template <std::uint64_t A, std::uint64_t C, std::uint64_t M>
+template <std::uint64_t A, std::uint64_t C, std::uint32_t M>
 class stateless_rand final {
  public:
   using value_type = std::uint32_t;
