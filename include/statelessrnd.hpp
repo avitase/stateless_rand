@@ -4,7 +4,8 @@
 #include <cstdint>
 
 namespace statelessrnd {
-template <std::uint64_t A, std::uint64_t C, std::uint32_t M>
+template <std::uint64_t A, std::uint64_t C, std::uint32_t M, std::uint32_t MIN,
+          std::uint32_t MAX>
 class stateless_rand final {
  public:
   using value_type = std::uint32_t;
@@ -15,11 +16,9 @@ class stateless_rand final {
 
  private:
   value_type _state;
-  static constexpr value_type _min = 1u;
-  static constexpr value_type _max = M - 1u;
 
   [[nodiscard]] static constexpr auto clamp_seed(value_type seed) noexcept {
-    return std::clamp(seed, _min, _max);
+    return std::clamp(seed, MIN, MAX);
   }
 
   [[nodiscard]] static constexpr auto advance(value_type x) noexcept {
@@ -52,10 +51,10 @@ class stateless_rand final {
     return value();
   }
 
-  [[nodiscard]] constexpr auto min() const noexcept { return _min; }
+  [[nodiscard]] constexpr auto min() const noexcept { return MIN; }
 
-  [[nodiscard]] constexpr auto max() const noexcept { return _max; }
+  [[nodiscard]] constexpr auto max() const noexcept { return MAX; }
 };
 
-using minstd_rand = stateless_rand<48271u, 0u, 2147483647u>;
+using minstd_rand = stateless_rand<48271u, 0u, 2147483647u, 1u, 2147483646u>;
 }  // namespace statelessrnd
