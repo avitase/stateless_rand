@@ -26,7 +26,7 @@ class stateless_rand final {
     return static_cast<value_type>((x * A + C) % M);
   }
 
-  constexpr explicit stateless_rand(value_type seed) : _state(seed) {}
+  constexpr explicit stateless_rand(value_type seed) noexcept : _state(seed) {}
 
  public:
   [[nodiscard]] static constexpr auto seed(value_type seed = default_seed,
